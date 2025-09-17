@@ -1,0 +1,35 @@
+/* body styles */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1bd4db;
+    color: #8208d8;
+}
+
+/* navigation bar styles */
+nav {
+    /* height: 600;  /*makes the nav bar 600px tall
+    width: 200px; /* makes the nav bar 200px wide */
+    float: left; /* positions the nav bar to the left side of the page */
+    background-color: #8208d8; /* sets the background color of the nav bar */
+    color: #1bd4db; /* sets the text color inside the nav bar */
+    padding: 10px; /*adds space inside the nav bar around its content */
+    line-height: 30px; /* increases the space between lines of text for better readability */
+}
+
+/*footer styles */
+footer {
+    text-align: center; /* centers the text inside the footer */
+    margin-right: 200px; /* adds space to the right of the footer */
+}
+
+/*meme Image */
+#memeimage{
+    margin-right: 200px; /* adds space to the right of the image */
+}
+
+/*header style */
+header {
+    text-align: center; /* centers the text inside the header */
+    color: #1bd4db; /* sets the text color inside the header bar */
+}
