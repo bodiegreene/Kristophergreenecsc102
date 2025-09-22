@@ -31,5 +31,6 @@ footer {
 /*header style */
 header {
     text-align: center; /* centers the text inside the header */
+    background-color: #8208d8; /* sets the background color of the header bar */
     color: #1bd4db; /* sets the text color inside the header bar */
 }
