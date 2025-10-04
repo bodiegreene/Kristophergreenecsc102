@@ -1,0 +1,73 @@
+<!-- Kristopher Greene -->
+
+<!DOCTYPE html> <!-- Declares the document type as HTML5 -->
+<html lang="en"> <!-- Opens the HTML document and sets the language to English -->
+
+<head> <!-- Head section of the HTML document -->
+  <meta charset="UTF-8"> <!-- Sets character encoding to UTF-8 -->
+  <title>Secure Message Access</title> <!-- Sets the title shown in the browser tab -->
+  <link rel="stylesheet" href="main.css"> <!-- Re-uses your existing CSS file for style -->
+</head>
+
+<body> <!-- Opens the body of the HTML document -->
+
+  <!-- Simple navigation menu to match the rest of the site -->
+  <nav> <!-- Opens the navigation bar -->
+    <a href="index.html">home</a> |
+    <a href="boards.html">boards</a> |
+    <a href="game.html">game</a> |
+    <a href="strings.html">secure access</a> <!-- Adds link to the new page -->
+  </nav> <!-- Closes the navigation bar -->
+
+  <h1>🔐 Secure Access Portal</h1> <!-- Main heading of the page -->
+
+  <!-- Form for user input -->
+  <form id="secureForm"> <!-- Opens a form with ID "secureForm" so JavaScript can use it -->
+
+    <label for="firstName">First Name:</label> <!-- Label for first name input -->
+    <input type="text" id="firstName" name="firstName"> <!-- Input for first name -->
+
+    <label for="lastName">Last Name:</label> <!-- Label for last name input -->
+    <input type="text" id="lastName" name="lastName"> <!-- Input for last name -->
+
+    <label for="zipCode">Zip Code:</label> <!-- Label for zip code input -->
+    <input type="text" id="zipCode" name="zipCode"> <!-- Input for zip code -->
+
+    <input type="submit" value="Access Secret"> <!-- Submit button for the form -->
+  </form> <!-- Closes the form -->
+
+  <!-- Placeholder where validation messages or the secret message will appear -->
+  <div id="message"></div> <!-- A div to display messages -->
+
+  <script> <!-- Opens the JavaScript section -->
+
+    const form = document.getElementById("secureForm"); <!-- Finds the form by ID -->
+
+    form.onsubmit = function(event) { <!-- Runs when the form is submitted -->
+      event.preventDefault(); <!-- Stops the page from refreshing -->
+
+      const first = document.getElementById("firstName").value.trim(); <!-- Gets the first name -->
+      const last = document.getElementById("lastName").value.trim(); <!-- Gets the last name -->
+      const zip = document.getElementById("zipCode").value.trim(); <!-- Gets the zip code -->
+
+      const fullName = first + " " + last; <!-- Combines first and last names -->
+      const msg = document.getElementById("message"); <!-- Gets the message div -->
+      msg.innerHTML = ""; <!-- Clears previous messages -->
+
+      if (fullName.length > 20) { <!-- Checks if full name is too long -->
+        msg.innerHTML = "⚠️ Full name cannot exceed 20 characters.";
+        return; <!-- Stops the code if invalid -->
+      }
+
+      if (!/^[0-9]{5}$/.test(zip)) { <!-- Checks if zip is exactly 5 digits -->
+        msg.innerHTML = "⚠️ Zip code must be 5 digits.";
+        return; <!-- Stops the code if invalid -->
+      }
+
+      msg.style.color = "green"; <!-- Changes text color to green for success -->
+      msg.innerHTML = "✅ Access Granted! The secret message is: <strong>‘Keep learning!’</strong>"; <!-- Shows the secret -->
+    };
+  </script> <!-- Closes the JavaScript section -->
+
+</body> <!-- Closes the body -->
+</html> <!-- Closes the HTML document -->
