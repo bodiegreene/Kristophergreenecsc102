@@ -1,40 +1,32 @@
-<!--Kristopher Greene,09/14/2025 -->
-<!-- DOCTYPE is the first tag and it tells the browser this is an html5 page -->
-<!DOCTYPE html>
-<!-- the html tag follows the DOCTYPE -->
-</html>
-    <!-- The head section follows the html and has info for the browser and search engine -->
-<head>
-    <title>csc102 home page</title>
-    <link rel="stylesheet" href="main.css">
-    <!-- nav section holds the menu -->
-     <nav>
-        <a href="index.html">home</a>
-        <br> |
-        <a href="boards.html">boards</a> |
-        <a href="game.html">game</a>
-        <a href="strings.html">secure access</a>
-        
-     </nav>
-    <head>
-</head>
+<!-- Kristopher Greene, 09/14/2025 --> <!-- attribution -->
+<!DOCTYPE html> <!-- HTML5 doctype -->
+<html lang="en"> <!-- root element with language -->
+<head> <!-- metadata container -->
+  <meta charset="utf-8"> <!-- proper character encoding -->
+  <title>csc102 home page</title> <!-- page title -->
+  <link rel="stylesheet" href="main.css"> <!-- external CSS -->
 
-<!-- the body section holds the text and images we want to show the user -->
+  <script src="motion.js" defer></script> <!-- movement engine (separate file) -->
+  <script src="code.js" defer></script> <!-- your dice code + meme UI add-ons -->
+</head> <!-- end head -->
 
-<body>
-    <h1>welcome to my cs102 home page<h1>
-        <!-- p is paragraph tag; has spacing around it by default -->
-    <p>
-        <!-- img is the image tag -->
-        <img id="memeimage" src="meme1.jpg">
-    <p>
-        <!-- Fooder gives details at the bottom of the page -->
-        <footer>University of advancing technology
-        <br>
-        2625 W Baseline Rd
-        <br>
-         Tempe, AZ 85283
-        <br>
-        </footer>
-    </body>
-</html> 
+<body> <!-- start visible content -->
+  <nav> <!-- top navigation menu -->
+    <a href="index.html">home</a> <!-- link: home -->
+    <br> | <!-- separator -->
+    <a href="boards.html">boards</a> | <!-- link: boards -->
+    <a href="game.html">game</a> <!-- link: game -->
+    <a href="strings.html">secure access</a> <!-- link: strings -->
+  </nav> <!-- end nav -->
+
+  <h1>welcome to my cs102 home page</h1> <!-- main heading -->
+
+  <div id="memeStatus">Ready: click Start.</div> <!-- status updated via innerHTML -->
+
+  <form id="memeControls" method="post" action="#"> <!-- submit form for Start/Stop -->
+    <button id="startBtn" type="submit" name="action" value="start" onclick="return onStartClicked(event)">Start</button> <!-- Start wired via onClick (no inline function bodies) -->
+    <button id="stopBtn"  type="submit" name="action" value="stop"  onclick="return onStopClicked(event)" disabled>Stop</button> <!-- Stop wired via onClick; disabled initially -->
+  </form> <!-- end meme controls -->
+
+  <p> <!-- paragraph wrapper -->
+    <img id="memeimage" src="meme1.jpg" alt="meme"> <!-- your meme image (will
