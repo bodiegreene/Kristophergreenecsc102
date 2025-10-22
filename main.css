@@ -34,3 +34,26 @@ header {
     background-color: #8208d8; /* sets the background color of the header bar */
     color: #1bd4db; /* sets the text color inside the header bar */
 }
+
+
+/* --- minimal additions for palindrome page --- */
+.messages {
+  min-height: 48px;
+  padding: 8px 10px;
+  border: 1px dashed #888;
+  border-radius: 8px;
+  margin: 8px 0 12px;
+}
+.continue.hidden { display: none; }
+.history-list { list-style: none; padding-left: 0; }
+.history-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+.chip { padding: 2px 8px; border-radius: 999px; border: 1px solid #999; font-size: 0.9rem; }
+.chip.ok { border-color: #4caf50; }
+.chip.bad { border-color: #ef4444; }
