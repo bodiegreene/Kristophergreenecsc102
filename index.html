@@ -19,6 +19,22 @@
     <a href="strings.html">secure access</a> <!-- link: strings -->
   </nav> <!-- end nav -->
 
+  <!--  looping player  -->
+<div id="bg-sound-section">
+  <!-- tells it what to do-->
+  <audio id="ambientAudio" controls loop preload="auto">
+    <!-- file to use  -->
+    <source src="Shards _ Smoke.mp3" type="audio/mpeg" />
+    <!-- message if audio isnt supported -->
+    Your browser does not support the audio element.
+  </audio>
+</div>
+
+<!-- (autoplay often blocked by browsers) -->
+<p class="audio-hint">Press <strong>Play</strong> to start the looping background track.</p>
+
+
+
   <h1>welcome to my cs102 home page</h1> <!-- main heading -->
 
   <div id="memeStatus">Ready: click Start.</div> <!-- status updated via innerHTML -->
