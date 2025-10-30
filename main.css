@@ -36,7 +36,7 @@ header {
 }
 
 
-/* --- minimal additions for palindrome page --- */
+/* --- additions for palindrome page --- */
 .messages {
   min-height: 48px;
   padding: 8px 10px;
@@ -57,3 +57,25 @@ header {
 .chip { padding: 2px 8px; border-radius: 999px; border: 1px solid #999; font-size: 0.9rem; }
 .chip.ok { border-color: #4caf50; }
 .chip.bad { border-color: #ef4444; }
+
+
+/* === new ui block (very visible changes) === */
+.badge-new { display:inline-block; background:#0b0f1a; border:2px solid #7c3aed; color:#7c3aed; padding:2px 10px; border-radius:999px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+.hero { display:flex; align-items:center; gap:8px; margin:10px 0 14px; }
+.hero svg { width:26px; height:26px; }
+.card { border:2px solid #7c3aed; border-radius:12px; padding:12px; background:linear-gradient(180deg,#0b1220,#0f172a); margin:8px 0; }
+.msg { padding:10px 12px; border-radius:10px; border:1px solid #333; background:#0b1220; }
+.msg.good{ border-color:#22c55e; }
+.msg.bad{ border-color:#ef4444; }
+.pill { display:inline-block; padding:3px 8px; border-radius:999px; border:1px solid #777; font-size:12px; }
+.stat { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; border:1px solid #2a2f3a; border-radius:10px; background:#0d1322; margin:6px 0; }
+.muted { color:#8b93a7; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.sep { height:1px; background:#222838; border-radius:1px; margin:8px 0; }
+.flash { animation: flash 700ms ease-out; }
+@keyframes flash { 0%{ box-shadow:0 0 0 0 rgba(124,58,237,.8);} 100%{ box-shadow:0 0 0 18px rgba(124,58,237,0);} }
+/* histogram list */
+.freq { display:grid; grid-template-columns: repeat(2, 1fr); gap:6px; }
+@media (min-width:720px){ .freq { grid-template-columns: repeat(4, 1fr); } }
+.freq li { list-style:none; display:flex; justify-content:space-between; border:1px dashed #374151; border-radius:8px; padding:4px 8px; }
+.count { font-weight:700; }

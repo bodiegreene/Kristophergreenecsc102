@@ -1,129 +1,192 @@
-// =============================
-// File: pal.js
-// Author: Kristopher Greene
-// Purpose: Palindrome Checker for Assignment 5.1
-// Strict requirements satisfied:
-//  - Use a FORM with SUBMIT for ALL input (no prompt(), no alerts).
-//  - Use innerHTML for validation + results (no alerts).
-//  - DO NOT use addEventListener (we assign form.onsubmit directly).
-//  - NO JavaScript functions inside HTML attributes (no inline handlers).
-//  - Implement a loop: (1) algorithmic for-loop for mirror checks, and
-//    (2) a user-driven continue/exit flow using radios within the same form.
-// =============================
+// Kristopher Greene  // author
+// pal.js            // palindrome analyzer script
 
-// --------------- DOM references (script loaded with defer so DOM is parsed) ---------------
-// Get the palindrome form element by ID
-var palForm = document.getElementById('palForm'); // main form node
-// Get the text box where the user types the candidate string
-var textBox = document.getElementById('userText'); // input[type=text]
-// Get the messages box where we write validation + results using innerHTML
-var messages = document.getElementById('messages'); // live region for feedback
-// Get the UL element that will store a running history of checks
-var historyList = document.getElementById('historyList'); // list of prior runs
-// Get the continue/exit fieldset (hidden until after first submit)
-var continueGroup = document.getElementById('continueGroup'); // radios group
-// Get the submit button so we can update its label after first run
-var submitBtn = document.getElementById('submitBtn'); // submit button
+// --------- ids  ---------
+var palForm   = document.getElementById('palForm');    // the form
+var palText   = document.getElementById('palText');    // input
+var msgBox    = document.getElementById('msg');        // validation box
+var reportBox = document.getElementById('report');     // result panel
+var statsBox  = document.getElementById('stats');      // stats panel
+var historyUl = document.getElementById('historyList');// history panel
+var freqUl    = document.getElementById('freqList');   // A–Z list
 
-// --------------- State to summarize a session ---------------
-// Keep each run in an array so we can compute totals when user exits
-var runs = []; // array of { original: string, cleaned: string, isPal: boolean, time: number }
+// -------------- escape for safe innerHTML  --------------
+function esc(s){ // escape
+  s = String(s);
+  var map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+  return s.replace(/[&<>"']/g, function(m){ return map[m]; });
+} // end esc
 
-// --------------- Helper: normalize user input for palindrome testing ---------------
-// Remove spaces + punctuation; keep letters/digits; lower-case for case-insensitive compare.
-function normalize(s) { // start normalize function
-  var base = String(s); // ensure string
-  var lower = base.toLowerCase(); // case-insensitive
-  var stripped = lower.match(/[a-z0-9]/g); // keep only letters and digits
-  return stripped ? stripped.join('') : ''; // join or return empty string
-} // end normalize
+// -------------- (objects + loops) --------------
+function Tools(raw){ // constructor
+  this.original = raw;
+  this.cleaned  = '';
+  this.reversed = '';
+  this.lengths  = { original:0, cleaned:0 };
+  this.counts   = { letters:0, digits:0, spaces:0, other:0 };
+  this.alpha    = {}; // a-z freq
+  this.isPal    = false;
+  this.firstMismatch = null; // index pair
+} // end constructor
 
-// --------------- Helper: isPalindrome using a for-loop (mirrored comparison) ---------------
-function isPalindrome(cleaned) { // start isPalindrome
-  // Use i from front and j from end; compare until they cross
-  for (var i = 0, j = cleaned.length - 1; i < j; i++, j--) { // loop over pairs
-    if (cleaned.charAt(i) !== cleaned.charAt(j)) { // mismatch found
-      return false; // not a palindrome
-    } // end if mismatch
-  } // end for
-  return true; // all mirrored pairs matched
-} // end isPalindrome
+Tools.prototype.sanitize = function(){ // keep a-z0-9
+  var t = this.original.trim();
+  this.cleaned = t.toLowerCase().replace(/[^a-z0-9]/g,'');
+  this.lengths.original = t.length;
+  this.lengths.cleaned  = this.cleaned.length;
+  return this;
+}; // end sanitize
 
-// --------------- Helper: render a single history row ---------------
-function appendHistory(entry) { // start appendHistory
-  // Create an LI to hold this result
-  var li = document.createElement('li'); // list item
-  // Create a div for the left text (original input quoted)
-  var left = document.createElement('div'); // left container
-  left.textContent = '“' + entry.original + '”'; // quote original input
-  // Create a span chip for the right result label
-  var chip = document.createElement('span'); // result chip
-  chip.className = 'chip ' + (entry.isPal ? 'ok' : 'bad'); // style based on result
-  chip.textContent = entry.isPal ? 'palindrome' : 'not a palindrome'; // label text
-  // Assemble and attach to the list
-  li.appendChild(left); // add left text
-  li.appendChild(chip); // add chip
-  historyList.appendChild(li); // append to UL
-} // end appendHistory
+Tools.prototype.reverse = function(){ // build reversed with loop
+  var out='';
+  for (var i=0;i<this.cleaned.length;i++){ out = this.cleaned.charAt(i) + out; } // prepend
+  this.reversed = out;
+  return this;
+}; // end reverse
 
-// --------------- REQUIRED: handle ALL input via form submit; no addEventListener ---------------
-palForm.onsubmit = function(evt) { // start submit handler
-  evt.preventDefault(); // stop navigation / page reload
+Tools.prototype.decide = function(){ // palindrome  (mirror check)
+  var ok = true;
+  var L = this.cleaned.length;
+  for (var i=0;i<Math.floor(L/2);i++){ // mirror loop
+    if (this.cleaned.charAt(i) !== this.cleaned.charAt(L-1-i)){
+      ok = false;
+      this.firstMismatch = {left:i, right:L-1-i};
+      break;
+    }
+  }
+  this.isPal = (L>=2 && ok);
+  return this;
+}; // end decide
 
-  messages.innerHTML = ''; // clear previous feedback via innerHTML
+Tools.prototype.tally = function(){ // category counts + a-z histogram
+  var t = this.original.trim();
+  this.counts = {letters:0,digits:0,spaces:0,other:0};
+  this.alpha  = {};
+  for (var k=0;k<26;k++){ this.alpha[String.fromCharCode(97+k)] = 0; } // a..z
+  for (var j=0;j<t.length;j++){
+    var ch = t.charAt(j);
+    if (/[a-zA-Z]/.test(ch)){ this.counts.letters++; this.alpha[ch.toLowerCase()] = (this.alpha[ch.toLowerCase()]||0)+1; }
+    else if (/[0-9]/.test(ch)){ this.counts.digits++; }
+    else if (ch === ' '){ this.counts.spaces++; }
+    else { this.counts.other++; }
+  }
+  return this;
+}; // end tally
 
-  var raw = textBox.value; // read the user's text
-  var cleaned = normalize(raw); // normalize per spec
+Tools.prototype.view = function(){ // build HTML
+  var safeO = esc(this.original.trim());
+  var safeC = esc(this.cleaned);
+  var safeR = esc(this.reversed);
+  var ok    = this.isPal;
+  var verdict  = ok ? '✅ palindrome' : '❌ not a palindrome';
+  var toneCls  = ok ? 'good' : 'bad';
 
-  if (!cleaned.length) { // if nothing to check
-    messages.innerHTML = '<p><strong>Please enter letters or numbers</strong> — spaces and punctuation are ignored.</p>'; // validation
-    textBox.focus(); // focus input
-    return false; // stop
-  } // end empty validation
+  var mismatch = '';
+  if (!ok && this.firstMismatch){ // show indices if not palindrome
+    mismatch = '<div class="muted">first mismatch at positions <span class="mono">' + this.firstMismatch.left + '</span> vs <span class="mono">' + this.firstMismatch.right + '</span></div>';
+  }
 
-  var pal = isPalindrome(cleaned); // compute result using loop-based compare
+  var left = ''
+    + '<div class="pill mono">original</div>'
+    + '<div class="stat"><span class="muted">you entered</span><b class="mono">' + (safeO||'(empty)') + '</b></div>'
+    + '<div class="stat"><span class="muted">cleaned</span><b class="mono">' + (safeC||'(n/a)') + '</b></div>'
+    + '<div class="stat"><span class="muted">reversed</span><b class="mono">' + (safeR||'(n/a)') + '</b></div>'
+    + '<div class="sep"></div>'
+    + '<div class="msg ' + toneCls + ' flash"><b>' + verdict + '</b></div>' + (mismatch||'');
 
-  if (pal) { // if palindrome
-    messages.innerHTML = '<p>✅ <strong>Yes!</strong> <em>“' + raw + '”</em> is a palindrome.</p>'; // positive message
-  } else { // not palindrome
-    messages.innerHTML = '<p>❌ <strong>Nope.</strong> <em>“' + raw + '”</em> is not a palindrome.</p>'; // negative message
-  } // end if result
+  var right = ''
+    + '<div class="pill">quick stats</div>'
+    + '<div class="stat"><span>original length</span><b class="count" data-to="' + this.lengths.original + '">0</b></div>'
+    + '<div class="stat"><span>cleaned length</span><b class="count" data-to="' + this.lengths.cleaned  + '">0</b></div>'
+    + '<div class="sep"></div>'
+    + '<div class="stat"><span>letters</span><b class="count" data-to="' + this.counts.letters + '">0</b></div>'
+    + '<div class="stat"><span>digits</span><b class="count" data-to="' + this.counts.digits  + '">0</b></div>'
+    + '<div class="stat"><span>spaces</span><b class="count" data-to="' + this.counts.spaces  + '">0</b></div>'
+    + '<div class="stat"><span>other</span><b class="count" data-to="'   + this.counts.other   + '">0</b></div>';
 
-  var entry = { original: raw, cleaned: cleaned, isPal: pal, time: Date.now() }; // pack data
-  runs.push(entry); // save in history
-  appendHistory(entry); // render into UL
+  return {left:left, right:right, verdict:verdict};
+}; // end view
 
-  continueGroup.classList.remove('hidden'); // reveal continue radios
-  submitBtn.textContent = 'Submit Response'; // update button label
+// -------------- UI helpers --------------
+var UI = {
+  showValidation: function(t, good){
+    var cls = good ? 'msg good' : 'msg bad';
+    msgBox.innerHTML = t ? '<div class="' + cls + '">' + esc(t) + '</div>' : '';
+  },
+  showPanels: function(view){
+    reportBox.innerHTML = view.left;
+    statsBox.innerHTML  = view.right;
+    animateCounts(); // numbers count up
+  },
+  setFreq: function(alpha){ // fill A–Z list
+    if (!freqUl) return;
+    var html = '';
+    for (var k=0;k<26;k++){
+      var ch = String.fromCharCode(97+k);
+      var n  = alpha[ch] || 0;
+      html += '<li><span>' + ch + '</span><span class="count">' + n + '</span></li>';
+    }
+    freqUl.innerHTML = html;
+  },
+  pushHistory: function(raw, verdict){
+    var li = document.createElement('li');
+    var good = verdict.indexOf('✅') === 0;
+    li.innerHTML = '<span class="mono">' + esc(raw) + '</span>'
+                 + '<span class="chip ' + (good?'ok':'bad') + '">' + esc(verdict) + '</span>';
+    historyUl.prepend(li);
+    while (historyUl.children.length > 5){ historyUl.removeChild(historyUl.lastChild); } // keep last 5
+  }
+};
 
-  // Read the continue choice from the form (default yes)
-  var formData = new FormData(palForm); // gather fields
-  var choice = String(formData.get('continue') || 'yes').toLowerCase(); // default yes
+// -------------- count up animation  --------------
+function animateCounts(){
+  var nodes = statsBox.querySelectorAll('.count');
+  for (var i=0;i<nodes.length;i++){
+    (function(span){
+      var target = parseInt(span.getAttribute('data-to')||'0',10);
+      var cur = 0; var steps = 16; var inc = Math.max(1, Math.ceil(target/steps));
+      var timer = setInterval(function(){
+        cur += inc;
+        if (cur >= target){ cur = target; clearInterval(timer); }
+        span.textContent = String(cur);
+      }, 20);
+    })(nodes[i]);
+  }
+}
 
-  if (choice === 'no') { // user done; exit loop
-    var total = runs.length; // count entries
-    var pals  = 0; // count palindromes
-    for (var k = 0; k < runs.length; k++) { // loop over runs to count palindromes
-      if (runs[k].isPal) pals++; // increment if palindrome
-    } // end count loop
-    var non   = total - pals; // non-palindromes
+// -------------- onsubmit only  --------------
+if (palForm) { // guard
+  palForm.onsubmit = function(evt){
+    if (evt && evt.preventDefault) evt.preventDefault(); // stop nav
 
-    // Add a summary line via innerHTML
-    var endNote = document.createElement('div'); // container
-    endNote.innerHTML = '<p><strong>Session complete.</strong> Checked <strong>' + total + '</strong> entr' + (total===1?'y':'ies') + ': ' +
-                        '<span class="chip ok">' + pals + ' palindrome</span>, ' +
-                        '<span class="chip bad">' + non + ' not a palindrome</span>.</p>'; // summary string
-    messages.appendChild(endNote); // append to message area
+    var raw = palText.value;
+    var trimmed = raw.trim();
 
-    // Disable form to signal we exited the loop
-    textBox.disabled = true; // disable text input
-    submitBtn.disabled = true; // disable submit
-    continueGroup.classList.add('hidden'); // hide radios
+    if (trimmed.length < 2){
+      UI.showValidation('please enter at least 2 characters to analyze.');
+      reportBox.innerHTML = '';
+      statsBox.innerHTML  = '';
+      if (freqUl) freqUl.innerHTML = '';
+      return false;
+    }
+    if (!/[a-z0-9]/i.test(trimmed)){
+      UI.showValidation('please include at least one letter or number.');
+      reportBox.innerHTML = '';
+      statsBox.innerHTML  = '';
+      if (freqUl) freqUl.innerHTML = '';
+      return false;
+    }
 
-  } else { // keep going
-    textBox.value = ''; // clear input
-    textBox.focus(); // focus for next entry
-  } // end continue branch
+    UI.showValidation('input looks good. see analysis below.', true);
 
-  return false; // guard return
-}; // end onsubmit
+    var t = new Tools(raw).sanitize().reverse().decide().tally(); // pipeline
+    var view = t.view();  // html
+    UI.showPanels(view);  // inject
+    UI.setFreq(t.alpha);  // a-z list
+    UI.pushHistory(trimmed, view.verdict); // history
+
+    palText.focus(); palText.select && palText.select(); // UX
+
+    return false; // stay on page
+  };
+} // end guard

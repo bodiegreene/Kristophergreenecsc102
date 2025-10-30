@@ -1,50 +1,62 @@
-<!-- Kristopher Greene -->
+<!-- Kristopher Greene --> 
 <!DOCTYPE html> <!-- HTML5 doctype -->
 <html lang="en"> <!-- root element language -->
 <head> <!-- metadata container -->
   <meta charset="UTF-8"> <!-- character encoding -->
   <title>Palindrome Checker</title> <!-- page title -->
   <link rel="stylesheet" href="main.css"> <!-- reuse site-wide CSS -->
-  <script src="pal.js" defer></script> <!-- palindrome logic (no inline JS; no addEventListener) -->
+  <script src="pal.js" defer></script> <!-- palindrome logic (external JS only) -->
 </head> <!-- end head -->
 
 <body> <!-- start visible content -->
   <nav> <!-- top navigation to match site -->
     <a href="index.html">home</a> <!-- home -->
     <br> | <!-- divider -->
-    <a href="game.html">dice game</a> <!-- dice -->
-    <br> | <!-- divider -->
     <a href="boards.html">boards</a> <!-- boards -->
     <br> | <!-- divider -->
-    <a href="strings.html">palindrome</a> <!-- current page -->
+    <a href="game.html">dice game</a> <!-- game -->
+    <br> | <!-- divider -->
+    <a href="strings.html">secure access</a> <!-- this page -->
   </nav> <!-- end nav -->
 
-  <h1>palindrome checker</h1> <!-- heading -->
+  <div class="hero"> <!-- big obvious header -->
+    <span class="badge-new">new</span> <!-- badge to show this page changed -->
+    <h1>palindrome checker</h1> <!-- page heading -->
+    <!-- inline svg icon (quill) -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 3c-5 2-9 6-11 10l-1 5 5-1c4-2 8-6 10-11"/>
+      <path d="M8 13l3 3"/>
+    </svg>
+  </div> <!-- end hero -->
 
-  <!-- Messages box: ALL validation/results via innerHTML (no alerts) -->
-  <div id="messages" class="messages"></div> <!-- live status -->
+  <div id="msg" class="msg">enter text and press check.</div> <!-- message area (innerHTML updates) -->
 
-  <!-- REQUIRED: One form with submit for ALL user input -->
-  <form id="palForm" method="post" action="#"> <!-- main form -->
-    <label for="userText">enter a word or phrase</label> <!-- prompt label -->
-    <input id="userText" name="userText" type="text" placeholder="e.g., radar" required> <!-- user text -->
-
-    <!-- Loop control: becomes visible after first submit -->
-    <fieldset id="continueGroup" class="continue hidden"> <!-- radios -->
-      <legend>enter another after this?</legend> <!-- legend -->
-      <label><input type="radio" name="continue" value="yes" checked> yes</label> <!-- default yes -->
-      <label><input type="radio" name="continue" value="no"> no, i'm done</label> <!-- end loop -->
-    </fieldset>
-
-    <button id="submitBtn" type="submit">check</button> <!-- submit button (no inline handlers) -->
+  <form id="palForm" method="post" action="#" novalidate> <!-- single form for all input -->
+    <label for="palText">text</label> <!-- label -->
+    <input id="palText" name="palText" type="text" required placeholder="never odd or even"> <!-- input -->
+    <button id="submitBtn" type="submit">check</button> <!-- submit -->
   </form> <!-- end form -->
 
-  <!-- History of checks -->
-  <h2>history</h2> <!-- subheading -->
-  <ul id="historyList" class="history-list"></ul> <!-- list of results -->
+  <section class="card"> <!-- results card (very visible) -->
+    <h2>results</h2> <!-- subheading -->
+    <div id="report" class="msg"></div> <!-- verdict + strings -->
+  </section> <!-- end results -->
+
+  <section class="card"> <!-- stats card (very visible) -->
+    <h2>stats</h2> <!-- subheading -->
+    <div id="stats" class="msg"></div> <!-- counts + lengths -->
+    <h3>letter freq</h3> <!-- histogram title -->
+    <ul id="freqList" class="freq"></ul> <!-- A–Z list -->
+  </section> <!-- end stats -->
+
+  <section class="card"> <!-- history card (very visible) -->
+    <h2>history</h2> <!-- subheading -->
+    <ul id="historyList" class="history-list"></ul> <!-- list of previous checks -->
+  </section> <!-- end history -->
 
   <footer> <!-- page footer -->
-    <small>uses <code>innerHTML</code> for messages • form submit only • no addEventListener • no inline JS</small> <!-- note -->
+    <p>&copy; 2024 Kristopher Greene</p> <!-- copyright -->
+    <p>Last updated: June 2024</p> <!-- last updated -->    
   </footer> <!-- end footer -->
 </body> <!-- end visible content -->
 </html>
