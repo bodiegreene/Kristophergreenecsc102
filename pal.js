@@ -1,5 +1,6 @@
 // Kristopher Greene  // author
-// pal.js            // palindrome analyzer script
+// pal.js             // file
+
 
 // --------- ids  ---------
 var palForm   = document.getElementById('palForm');    // the form
@@ -17,8 +18,8 @@ function esc(s){ // escape
   return s.replace(/[&<>"']/g, function(m){ return map[m]; });
 } // end esc
 
-// -------------- (objects + loops) --------------
-function Tools(raw){ // constructor
+// --------------  (objects + loops) --------------
+function Tools(raw){ // constructor (ES5 style)
   this.original = raw;
   this.cleaned  = '';
   this.reversed = '';
@@ -27,7 +28,7 @@ function Tools(raw){ // constructor
   this.alpha    = {}; // a-z freq
   this.isPal    = false;
   this.firstMismatch = null; // index pair
-} // end constructor
+}
 
 Tools.prototype.sanitize = function(){ // keep a-z0-9
   var t = this.original.trim();
@@ -35,16 +36,16 @@ Tools.prototype.sanitize = function(){ // keep a-z0-9
   this.lengths.original = t.length;
   this.lengths.cleaned  = this.cleaned.length;
   return this;
-}; // end sanitize
+};
 
 Tools.prototype.reverse = function(){ // build reversed with loop
   var out='';
   for (var i=0;i<this.cleaned.length;i++){ out = this.cleaned.charAt(i) + out; } // prepend
   this.reversed = out;
   return this;
-}; // end reverse
+};
 
-Tools.prototype.decide = function(){ // palindrome  (mirror check)
+Tools.prototype.decide = function(){ // palindrome + first mismatch index
   var ok = true;
   var L = this.cleaned.length;
   for (var i=0;i<Math.floor(L/2);i++){ // mirror loop
@@ -56,7 +57,7 @@ Tools.prototype.decide = function(){ // palindrome  (mirror check)
   }
   this.isPal = (L>=2 && ok);
   return this;
-}; // end decide
+};
 
 Tools.prototype.tally = function(){ // category counts + a-z histogram
   var t = this.original.trim();
@@ -71,9 +72,9 @@ Tools.prototype.tally = function(){ // category counts + a-z histogram
     else { this.counts.other++; }
   }
   return this;
-}; // end tally
+};
 
-Tools.prototype.view = function(){ // build HTML
+Tools.prototype.view = function(){ // build HTML strings
   var safeO = esc(this.original.trim());
   var safeC = esc(this.cleaned);
   var safeR = esc(this.reversed);
@@ -82,7 +83,7 @@ Tools.prototype.view = function(){ // build HTML
   var toneCls  = ok ? 'good' : 'bad';
 
   var mismatch = '';
-  if (!ok && this.firstMismatch){ // show indices if not palindrome
+  if (!ok && this.firstMismatch){
     mismatch = '<div class="muted">first mismatch at positions <span class="mono">' + this.firstMismatch.left + '</span> vs <span class="mono">' + this.firstMismatch.right + '</span></div>';
   }
 
@@ -92,7 +93,7 @@ Tools.prototype.view = function(){ // build HTML
     + '<div class="stat"><span class="muted">cleaned</span><b class="mono">' + (safeC||'(n/a)') + '</b></div>'
     + '<div class="stat"><span class="muted">reversed</span><b class="mono">' + (safeR||'(n/a)') + '</b></div>'
     + '<div class="sep"></div>'
-    + '<div class="msg ' + toneCls + ' flash"><b>' + verdict + '</b></div>' + (mismatch||'');
+    + '<div class="msg ' + toneCls + ' flash"><b>' + verdict + '</b>' + (mismatch||'') + '</div>';
 
   var right = ''
     + '<div class="pill">quick stats</div>'
@@ -105,7 +106,7 @@ Tools.prototype.view = function(){ // build HTML
     + '<div class="stat"><span>other</span><b class="count" data-to="'   + this.counts.other   + '">0</b></div>';
 
   return {left:left, right:right, verdict:verdict};
-}; // end view
+};
 
 // -------------- UI helpers --------------
 var UI = {
@@ -118,7 +119,7 @@ var UI = {
     statsBox.innerHTML  = view.right;
     animateCounts(); // numbers count up
   },
-  setFreq: function(alpha){ // fill A–Z list
+  setFreq: function(alpha){
     if (!freqUl) return;
     var html = '';
     for (var k=0;k<26;k++){
@@ -134,7 +135,7 @@ var UI = {
     li.innerHTML = '<span class="mono">' + esc(raw) + '</span>'
                  + '<span class="chip ' + (good?'ok':'bad') + '">' + esc(verdict) + '</span>';
     historyUl.prepend(li);
-    while (historyUl.children.length > 5){ historyUl.removeChild(historyUl.lastChild); } // keep last 5
+    while (historyUl.children.length > 5){ historyUl.removeChild(historyUl.lastChild); }
   }
 };
 
@@ -154,10 +155,10 @@ function animateCounts(){
   }
 }
 
-// -------------- onsubmit only  --------------
-if (palForm) { // guard
+// -------------- onsubmit only --------------
+if (palForm) {
   palForm.onsubmit = function(evt){
-    if (evt && evt.preventDefault) evt.preventDefault(); // stop nav
+    if (evt && evt.preventDefault) evt.preventDefault();
 
     var raw = palText.value;
     var trimmed = raw.trim();
@@ -179,14 +180,13 @@ if (palForm) { // guard
 
     UI.showValidation('input looks good. see analysis below.', true);
 
-    var t = new Tools(raw).sanitize().reverse().decide().tally(); // pipeline
-    var view = t.view();  // html
-    UI.showPanels(view);  // inject
-    UI.setFreq(t.alpha);  // a-z list
-    UI.pushHistory(trimmed, view.verdict); // history
+    var t = new Tools(raw).sanitize().reverse().decide().tally();
+    var view = t.view();
+    UI.showPanels(view);
+    UI.setFreq(t.alpha);
+    UI.pushHistory(trimmed, view.verdict);
 
-    palText.focus(); palText.select && palText.select(); // UX
-
-    return false; // stay on page
+    palText.focus(); palText.select && palText.select();
+    return false;
   };
-} // end guard
+}

@@ -1,0 +1,99 @@
+<!-- Kristopher Greene, 10/30/2025 -->
+<!DOCTYPE html> <!-- Declares that this is an HTML5 document -->
+<html lang="en"> <!-- Root element of the HTML document, specifies English language -->
+<head> <!-- Contains metadata about the document -->
+  <meta charset="utf-8"> <!-- Sets character encoding to UTF-8 -->
+  <title>maker lab table</title> <!-- Sets the page title shown in browser tab -->
+  <link rel="stylesheet" href="main.css"> <!-- Links to external CSS file -->
+  <style> <!-- Internal CSS styles -->
+    /* Container class with maximum width and centered alignment */
+    .wrap{ max-width:980px; margin:16px auto; padding:12px; }
+    /* Style for note text with smaller font and gray color */
+    .note{ font-size:.95rem; color:#6b7280; margin:6px 0 14px; }
+  </style>
+</head>
+<body>
+  <!-- Navigation menu -->
+  <nav>
+    <!-- Navigation links with separators -->
+    <a href="index.html">home</a>
+    <br> | <!-- Line break with separator -->
+    <a href="boards.html">boards</a>
+    <br> |
+    <a href="game.html">game</a>
+    <br> |
+    <a href="strings.html">palindrome</a>
+    <br> |
+    <a href="lab-table.html">lab table</a>
+  </nav>
+
+  <!-- Header section with title and description -->
+  <header class="wrap">
+    <h1>maker lab equipment table</h1>
+    <p class="note">This table displays the current status of equipment in the maker lab. Use it to check availability and service dates before planning your projects.</p>
+  </header>
+
+  <!-- Main content section -->
+  <main class="wrap">
+    <!-- Table card container -->
+    <div class="table-card">
+      <h2 class="table-title">equipment status</h2>
+      <!-- Responsive table wrapper -->
+      <div class="table-responsive">
+        <table class="board-table">
+          <!-- Screen reader only caption for accessibility -->
+          <caption class="sr-only">current maker lab equipment status board</caption>
+          <!-- Table header -->
+          <thead>
+            <tr>
+              <th scope="col">item</th> <!-- Column header for equipment name -->
+              <th scope="col">location</th> <!-- Column header for equipment location -->
+              <th scope="col">status</th> <!-- Column header for availability status -->
+              <th scope="col">last serviced</th> <!-- Column header for maintenance date -->
+              <th scope="col">notes</th> <!-- Column header for additional information -->
+            </tr>
+          </thead>
+          <!-- Table body containing equipment data -->
+          <tbody>
+            <!-- 3D Printer row -->
+            <tr>
+              <td>FDM 3D Printer – Sovol SV08</td> <!-- Equipment name -->
+              <td>bay A – bench 2</td> <!-- Location info -->
+              <td><span class="chip ok">available</span></td> <!-- Status with styling -->
+              <td>2025-10-15</td> <!-- Last service date -->
+              <td>PLA only today; nozzle 0.4&nbsp;mm</td> <!-- Additional notes -->
+            </tr>
+            <!-- CNC Router row -->
+            <tr>
+              <td>CNC Router – 24&quot; × 18&quot;</td> <!-- Equipment with dimensions -->
+              <td>bay C – cnc room</td>
+              <td><span class="chip bad">reserved</span></td> <!-- Reserved status -->
+              <td>2025-10-18</td>
+              <td>toolpath checks at 12:30pm</td>
+            </tr>
+            <!-- Laser Cutter row -->
+            <tr>
+              <td>Laser Cutter – 60W CO₂</td>
+              <td>bay B – laser lab</td>
+              <td><span class="chip ok">available</span></td>
+              <td>2025-10-10</td>
+              <td style="background:#0b1220; border:1px dashed #7c3aed;">inline css example (dashed highlight)</td> <!-- Cell with custom styling -->
+            </tr>
+            <!-- Vacuum Former row -->
+            <tr>
+              <td>Vacuum Former – Small Bed</td>
+              <td>bay D – fab corner</td>
+              <td><span class="chip ok">available</span></td>
+              <td>2025-09-30</td>
+              <td>ready for Halloween mold runs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer navigation with centered back link -->
+  <div style="margin:16px; text-align:center;"><a href="index.html">← back to home</a></div>
+</body> <!-- End of document body -->
+</html> <!-- End of HTML document -->

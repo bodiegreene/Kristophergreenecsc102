@@ -1,4 +1,4 @@
-<!-- Kristopher Greene --> 
+<!-- Kristopher Greene --> <!-- attribution -->
 <!DOCTYPE html> <!-- HTML5 doctype -->
 <html lang="en"> <!-- root element language -->
 <head> <!-- metadata container -->
@@ -9,54 +9,52 @@
 </head> <!-- end head -->
 
 <body> <!-- start visible content -->
-  <nav> <!-- top navigation to match site -->
-    <a href="index.html">home</a> <!-- home -->
-    <br> | <!-- divider -->
-    <a href="boards.html">boards</a> <!-- boards -->
-    <br> | <!-- divider -->
-    <a href="game.html">dice game</a> <!-- game -->
-    <br> | <!-- divider -->
-    <a href="strings.html">secure access</a> <!-- this page -->
+  <nav> <!-- top navigation -->
+    <a href="index.html">home</a>
+    <br> |
+    <a href="boards.html">boards</a>
+    <br> |
+    <a href="game.html">game</a>
+    <br> |
+    <a href="strings.html">palindrome</a>
+    <br> |
+    <a href="lab-table.html">lab table</a>
   </nav> <!-- end nav -->
 
-  <div class="hero"> <!-- big obvious header -->
-    <span class="badge-new">new</span> <!-- badge to show this page changed -->
-    <h1>palindrome checker</h1> <!-- page heading -->
-    <!-- inline svg icon (quill) -->
+  <div class="hero"> <!-- big header -->
+    <span class="badge-new">new</span> <!-- visual tag -->
+    <h1>palindrome checker</h1> <!-- heading -->
     <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M20 3c-5 2-9 6-11 10l-1 5 5-1c4-2 8-6 10-11"/>
       <path d="M8 13l3 3"/>
     </svg>
   </div> <!-- end hero -->
 
-  <div id="msg" class="msg">enter text and press check.</div> <!-- message area (innerHTML updates) -->
+  <div id="msg" class="msg">enter text and press check.</div> <!-- validation/status -->
 
-  <form id="palForm" method="post" action="#" novalidate> <!-- single form for all input -->
+  <form id="palForm" method="post" action="#" novalidate> <!-- single form -->
     <label for="palText">text</label> <!-- label -->
     <input id="palText" name="palText" type="text" required placeholder="never odd or even"> <!-- input -->
     <button id="submitBtn" type="submit">check</button> <!-- submit -->
   </form> <!-- end form -->
 
-  <section class="card"> <!-- results card (very visible) -->
-    <h2>results</h2> <!-- subheading -->
+  <section class="card"> <!-- results card -->
+    <h2>results</h2>
     <div id="report" class="msg"></div> <!-- verdict + strings -->
-  </section> <!-- end results -->
+  </section>
 
-  <section class="card"> <!-- stats card (very visible) -->
-    <h2>stats</h2> <!-- subheading -->
+  <section class="card"> <!-- stats card -->
+    <h2>stats</h2>
     <div id="stats" class="msg"></div> <!-- counts + lengths -->
-    <h3>letter freq</h3> <!-- histogram title -->
-    <ul id="freqList" class="freq"></ul> <!-- A–Z list -->
-  </section> <!-- end stats -->
+    <h3>letter freq</h3>
+    <ul id="freqList" class="freq"></ul> <!-- A–Z -->
+  </section>
 
-  <section class="card"> <!-- history card (very visible) -->
-    <h2>history</h2> <!-- subheading -->
-    <ul id="historyList" class="history-list"></ul> <!-- list of previous checks -->
-  </section> <!-- end history -->
+  <section class="card"> <!-- history card -->
+    <h2>history</h2>
+    <ul id="historyList" class="history-list"></ul> <!-- previous checks -->
+  </section>
 
-  <footer> <!-- page footer -->
-    <p>&copy; 2024 Kristopher Greene</p> <!-- copyright -->
-    <p>Last updated: June 2024</p> <!-- last updated -->    
-  </footer> <!-- end footer -->
-</body> <!-- end visible content -->
+  <div style="margin:16px; text-align:center;"><a href="index.html">← back to home</a></div>
+</body>
 </html>
